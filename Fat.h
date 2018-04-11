@@ -13,6 +13,7 @@ public:
     void display();
 
 private:
+    uint32_t nbEntries;
     FatEntry* entries;
 
     void sanityCheck();

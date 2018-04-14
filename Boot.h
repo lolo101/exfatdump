@@ -6,8 +6,6 @@
 
 using namespace std;
 
-const size_t SECTOR_SIZE = 512;
-
 struct BootSector {
     uint8_t jmp[3];
     char name[8];
@@ -37,6 +35,8 @@ public:
     void display();
 
     BootSector* sector;
+    size_t sectorSize();
+    size_t clusterSize();
 
 private:
 

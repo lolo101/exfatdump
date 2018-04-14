@@ -2,6 +2,8 @@
 #include "SanityException.h"
 #include <cstring>
 
+const size_t SECTOR_SIZE = 512;
+
 Boot::Boot(FILE* drive) {
     this->sector = new BootSector();
 
@@ -20,6 +22,14 @@ Boot::Boot(FILE* drive) {
 
 Boot::~Boot() {
     delete this->sector;
+}
+
+size_t Boot::sectorSize() {
+    return 1 << sector->bytesPerSector;
+}
+
+size_t Boot::clusterSize() {
+    return sectorSize() << sector->sectorPerCluster;
 }
 
 void Boot::sanityCheck() {
@@ -59,9 +69,9 @@ void Boot::display() {
     printf("SN     : %08x\n", sector->volumeSN);
     printf("FS rev : %02hhx.%02hhx\n", sector->fsRev[1], sector->fsRev[0]);
     printf("\n");
-    printf("Bytes Per Sector  : 2^%hhu (%d)\n", sector->bytesPerSector, 1 << sector->bytesPerSector);
-    printf("Sector Per Cluster: 2^%hhu (%d)\n", sector->sectorPerCluster, 1 << sector->sectorPerCluster);
-    printf("\tCluster size : %d bytes\n", (1 << sector->bytesPerSector) * (1 << sector->sectorPerCluster));
+    printf("Bytes Per Sector  : 2^%hhu (%zu)\n", sector->bytesPerSector, sectorSize());
+    printf("Sector Per Cluster: 2^%hhu (%u)\n", sector->sectorPerCluster, 1 << sector->sectorPerCluster);
+    printf("\tCluster size : %zu bytes\n", clusterSize());
     printf("\n");
     printf("Partition offset : %ld sectors\n", sector->partitionOffset);
     printf("Volume length    : %lu sectors\n", sector->volumeLength);

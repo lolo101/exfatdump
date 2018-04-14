@@ -17,7 +17,7 @@ private:
     FatEntry* entries;
 
     void sanityCheck();
+    size_t sizeInCluster(FatEntry firstEntry);
+    size_t incSize(FatEntry entry, size_t sizeInCluster);
 };
-
 #endif /* FATC_H */
-
